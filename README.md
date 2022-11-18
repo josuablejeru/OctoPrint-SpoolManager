@@ -1,17 +1,13 @@
 # OctoPrint-SpoolManager
-
+<!--
 [![Version](https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=version&url=https://api.github.com/repos/OllisGit/OctoPrint-SpoolManager/releases&query=$[0].name)]()
 [![Released](https://img.shields.io/badge/dynamic/json.svg?color=brightgreen&label=released&url=https://api.github.com/repos/OllisGit/OctoPrint-SpoolManager/releases&query=$[0].published_at)]()
-![GitHub Releases (by Release)](https://img.shields.io/github/downloads/OllisGit/OctoPrint-SpoolManager/latest/total.svg)
+![GitHub Releases (by Release)](https://img.shields.io/github/downloads/OllisGit/OctoPrint-SpoolManager/latest/total.svg) -->
+
+> THIS IS A FORK OF OllisGit SPOOLMANAGER FOR OCTOPRINT
+> It's scope for now is to add an external database and change a couple of other elements.
 
 The OctoPrint-Plugin manages all spool informations and stores it in a database.
-
-#### Support my Efforts
-
-This plugin, as well as my [other plugins](https://github.com/OllisGit/) were developed in my spare time.
-If you like it, I would be thankful about a cup of coffee :)
-
-[![More coffee, more code](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6SW5R6ZUKLB5E&source=url)
 
 ## Tested with:
 - OctoPrint 1.7.2:  with Python 3.7.3
@@ -89,6 +85,26 @@ see [Release-Overview](https://github.com/OllisGit/OctoPrint-SpoolManager/releas
 ---
 # Developer - Section
 
+## How to develop new features
+To test and build new features use docker and docker-compose to spawn containers with everything you need.
+
+This command will get you started
+```bash
+$ docker-compose up
+```
+
+spawn inside the container to execute commands
+```bash
+$ docker-compose exec octoprint /bin/bash
+```
+
+CD inside of `/plugins` and install the plugin in development mode
+```bash
+$ python setup.py develop
+```
+
+reload octoprint server from the UI to see your plugin taking effect
+
 ## Events
 Plugin sends the following custom events to the eventbus like this:
 
@@ -162,13 +178,3 @@ select2 https://select2.org/
 
 * WYSIWYG - Editor
 quill https://quilljs.com/
-
-------
-    docker-compose up
-_
-
-    docker-compose down --volumes
-_
-
-    docker-compose run postgres bash
-
