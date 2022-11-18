@@ -35,11 +35,10 @@ plugin_license = "AGPLv3"
 
 # Any additional requirements besides OctoPrint should be listed here
 plugin_requires = [
-    "pillow >=6.2.0<7.0.0",  # since 7.0.0 no Python 2.7 Support, see https://github.com/python-pillow/Pillow/blob/master/CHANGES.rst
-    "qrcode",
-    "peewee"
-    # "psycopg2-binary",  # postgres - driver
-    # "pymysql",	#mysql - driver
+    "pillow==9.3.0",
+    "qrcode==7.3.1",
+    "peewee==3.15.4",
+    "psycopg2-binary==2.9.5",
 ]
 
 ### --------------------------------------------------------------------------------------------------------------------
@@ -56,7 +55,7 @@ plugin_additional_data = []
 plugin_additional_packages = []
 
 # Any python packages within <plugin_package>.* you do NOT want to install with your plugin
-plugin_ignored_packages = ["black"]
+plugin_ignored_packages = ["black",]
 
 # Additional parameters for the call to setuptools.setup. If your plugin wants to register additional entry points,
 # define dependency links or other things like that, this is the place to go. Will be merged recursively with the
