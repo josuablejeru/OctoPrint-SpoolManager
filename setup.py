@@ -55,7 +55,7 @@ plugin_additional_data = []
 plugin_additional_packages = []
 
 # Any python packages within <plugin_package>.* you do NOT want to install with your plugin
-plugin_ignored_packages = ["black",]
+plugin_ignored_packages = ["black", "pytest"]
 
 # Additional parameters for the call to setuptools.setup. If your plugin wants to register additional entry points,
 # define dependency links or other things like that, this is the place to go. Will be merged recursively with the
