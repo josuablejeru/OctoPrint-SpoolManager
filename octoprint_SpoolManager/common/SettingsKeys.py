@@ -1,48 +1,49 @@
 # coding=utf-8
 from __future__ import absolute_import
 
-class SettingsKeys():
 
-	SETTINGS_KEY_SELECTED_SPOOLS_DATABASE_IDS = "selectedSpoolsDatabaseIds"
-	SETTINGS_KEY_HIDE_EMPTY_SPOOL_IN_SIDEBAR = "hideEmptySpoolsInSidebar"
-	SETTINGS_KEY_HIDE_INACTIVE_SPOOL_IN_SIDEBAR = "hideInactiveSpoolsInSidebar"
+class SettingsKeys:
 
-	SETTINGS_KEY_REMINDER_SELECTING_SPOOL = "reminderSelectingSpool"
-	SETTINGS_KEY_WARN_IF_SPOOL_NOT_SELECTED = "warnIfSpoolNotSelected"
-	SETTINGS_KEY_WARN_IF_FILAMENT_NOT_ENOUGH = "warnIfFilamentNotEnough"
+    SETTINGS_KEY_SELECTED_SPOOLS_DATABASE_IDS = "selectedSpoolsDatabaseIds"
+    SETTINGS_KEY_HIDE_EMPTY_SPOOL_IN_SIDEBAR = "hideEmptySpoolsInSidebar"
+    SETTINGS_KEY_HIDE_INACTIVE_SPOOL_IN_SIDEBAR = "hideInactiveSpoolsInSidebar"
 
-	SETTINGS_KEY_CURRENCY_SYMBOL = "currencySymbol"
+    SETTINGS_KEY_REMINDER_SELECTING_SPOOL = "reminderSelectingSpool"
+    SETTINGS_KEY_WARN_IF_SPOOL_NOT_SELECTED = "warnIfSpoolNotSelected"
+    SETTINGS_KEY_WARN_IF_FILAMENT_NOT_ENOUGH = "warnIfFilamentNotEnough"
 
-	SETTINGS_KEY_SAFETY_LENGTH = "safetyLength" # in mm e.g. ptfe-tube
+    SETTINGS_KEY_CURRENCY_SYMBOL = "currencySymbol"
 
-	## QR - Code
-	SETTINGS_KEY_QR_CODE_ENABLED = "qrCodeEnabled"
-	SETTINGS_KEY_QR_CODE_USE_URL_PREFIX = "qrCodeUseURLPrefix"
-	SETTINGS_KEY_QR_CODE_URL_PREFIX = "qrCodeURLPrefix"
-	SETTINGS_KEY_QR_CODE_FILL_COLOR = "qrCodeFillColor"
-	SETTINGS_KEY_QR_CODE_BACKGROUND_COLOR = "qrCodeBackgroundColor"
-	SETTINGS_KEY_QR_CODE_WIDTH = "qrCodeWidth"
-	SETTINGS_KEY_QR_CODE_HEIGHT = "qrCodeHeight"
+    SETTINGS_KEY_SAFETY_LENGTH = "safetyLength"  # in mm e.g. ptfe-tube
 
-	## Export / Import
-	SETTINGS_KEY_IMPORT_CSV_MODE = "importCSVMode"
-	KEY_IMPORTCSV_MODE_REPLACE = "replace"
-	KEY_IMPORTCSV_MODE_APPEND = "append"
+    ## QR - Code
+    SETTINGS_KEY_QR_CODE_ENABLED = "qrCodeEnabled"
+    SETTINGS_KEY_QR_CODE_USE_URL_PREFIX = "qrCodeUseURLPrefix"
+    SETTINGS_KEY_QR_CODE_URL_PREFIX = "qrCodeURLPrefix"
+    SETTINGS_KEY_QR_CODE_FILL_COLOR = "qrCodeFillColor"
+    SETTINGS_KEY_QR_CODE_BACKGROUND_COLOR = "qrCodeBackgroundColor"
+    SETTINGS_KEY_QR_CODE_WIDTH = "qrCodeWidth"
+    SETTINGS_KEY_QR_CODE_HEIGHT = "qrCodeHeight"
 
-	## Storage
-	SETTINGS_KEY_DATABASE_USE_EXTERNAL = "useExternal"
-	SETTINGS_KEY_DATABASE_LOCAL_FILELOCATION = "databaseFileLocation"
-	SETTINGS_KEY_DATABASE_TYPE = "databaseType"
-	SETTINGS_KEY_DATABASE_HOST = "databaseHost"
-	SETTINGS_KEY_DATABASE_PORT = "databasePort"
-	SETTINGS_KEY_DATABASE_NAME = "databaseName"
-	SETTINGS_KEY_DATABASE_USER = "databaseUser"
-	SETTINGS_KEY_DATABASE_PASSWORD = "databasePassword"
+    ## Export / Import
+    SETTINGS_KEY_IMPORT_CSV_MODE = "importCSVMode"
+    KEY_IMPORTCSV_MODE_REPLACE = "replace"
+    KEY_IMPORTCSV_MODE_APPEND = "append"
 
-	SETTINGS_KEY_TOOL_OFFSET_ENABLED = "toolOffsetEnabled"
-	SETTINGS_KEY_BED_OFFSET_ENABLED = "bedOffsetEnabled"
-	SETTINGS_KEY_ENCLOSURE_OFFSET_ENABLED = "enclosureOffsetEnabled"
+    ## Storage
+    SETTINGS_KEY_DATABASE_USE_EXTERNAL = "useExternal"
+    SETTINGS_KEY_DATABASE_LOCAL_FILELOCATION = "databaseFileLocation"
+    SETTINGS_KEY_DATABASE_TYPE = "databaseType"
+    SETTINGS_KEY_DATABASE_HOST = "databaseHost"
+    SETTINGS_KEY_DATABASE_PORT = "databasePort"
+    SETTINGS_KEY_DATABASE_NAME = "databaseName"
+    SETTINGS_KEY_DATABASE_USER = "databaseUser"
+    SETTINGS_KEY_DATABASE_PASSWORD = "databasePassword"
 
-	## Debugging
-	SETTINGS_KEY_SQL_LOGGING_ENABLED = "sqlLoggingEnabled"
-	SETTINGS_KEY_EXTRUSION_DEBUGGING_ENABLED = "extrusionDebuggingEnabled"
+    SETTINGS_KEY_TOOL_OFFSET_ENABLED = "toolOffsetEnabled"
+    SETTINGS_KEY_BED_OFFSET_ENABLED = "bedOffsetEnabled"
+    SETTINGS_KEY_ENCLOSURE_OFFSET_ENABLED = "enclosureOffsetEnabled"
+
+    ## Debugging
+    SETTINGS_KEY_SQL_LOGGING_ENABLED = "sqlLoggingEnabled"
+    SETTINGS_KEY_EXTRUSION_DEBUGGING_ENABLED = "extrusionDebuggingEnabled"
