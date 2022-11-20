@@ -1,7 +1,8 @@
-
-<form id="settings_spoolmanager" class="form-horizontal" >
-    <h3>Spool Manager <small>{{ _('Version') }}: <span data-bind="text: pluginSettings.installed_version"></span></small></h3>
-    <div class="tabbable"> <!-- Only required for left/right tabs -->
+<form id="settings_spoolmanager" class="form-horizontal">
+    <h3>Spool Manager <small>{{ _('Version') }}: <span
+                data-bind="text: pluginSettings.installed_version"></span></small></h3>
+    <div class="tabbable">
+        <!-- Only required for left/right tabs -->
         <ul class="nav nav-tabs" id="spoolmanger-settings-tab">
             <li class="active"><a href="#tab-spool-General" data-toggle="tab">General</a></li>
             <li><a href="#tab-spool-Temperature" data-toggle="tab">Temperature</a></li>
@@ -17,47 +18,53 @@
                 <div class="control-group">
                     <label class="control-label">Currency symbol</label>
                     <div class="controls">
-                        <input type="text" class="input-mini text-center" data-bind="value: pluginSettings.currencySymbol">
+                        <input type="text" class="input-mini text-center"
+                            data-bind="value: pluginSettings.currencySymbol">
                     </div>
                 </div>
-                <hr/>
+                <hr />
                 <h4>Notifications</h4>
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.reminderSelectingSpool" > Reminder for verifying the selected spool.
+                            <input type="checkbox" data-bind="checked: pluginSettings.reminderSelectingSpool"> Reminder
+                            for verifying the selected spool.
                         </label>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.warnIfSpoolNotSelected" > Warn, if no spool is selected.
+                            <input type="checkbox" data-bind="checked: pluginSettings.warnIfSpoolNotSelected"> Warn, if
+                            no spool is selected.
                         </label>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.warnIfFilamentNotEnough" > Warn, if filament is not enough for print job
+                            <input type="checkbox" data-bind="checked: pluginSettings.warnIfFilamentNotEnough"> Warn, if
+                            filament is not enough for print job
                         </label>
-                        <span class="help-inline">Hint: It is only working, if the spool contains values for these fields: <br>
+                        <span class="help-inline">Hint: It is only working, if the spool contains values for these
+                            fields: <br>
                             <code>diameter</code>, <code>density</code>, <code>total weight</code>!</span>
                     </div>
                 </div>
 
-                <hr/>
+                <hr />
                 <h4>Remaining check</h4>
                 <div class="control-group">
                     <label class="control-label">Enter safety buffer (e.g. PTFE Tube length)</label>
                     <div class="controls">
                         <div class="input-append">
-                            <input type="number" step="1" min="0" class="input-mini text-right" data-bind="value: pluginSettings.safetyLength" >
+                            <input type="number" step="1" min="0" class="input-mini text-right"
+                                data-bind="value: pluginSettings.safetyLength">
                             <span class="add-on">mm</span>
                         </div>
                     </div>
                 </div>
-<!--
+                <!--
                 <h4>Default Catalogs</h4>
                 <div>
                     You can enter default values for the selection lists in the Spool edit dialog.<br/>
@@ -113,21 +120,26 @@ FPE;	2.16
                 <div class="control-group">
                     <h4>Temperature Offsets</h4>
                     <div>
-                        Setting these will replace the current offset value on the temperature tab with the value set in the temperature field of the selected spool.
+                        Setting these will replace the current offset value on the temperature tab with the value set in
+                        the temperature field of the selected spool.
                     </div>
                     <br>
 
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.toolOffsetEnabled" > Update Tool Offset with the spool Tool Temperature value
+                            <input type="checkbox" data-bind="checked: pluginSettings.toolOffsetEnabled"> Update Tool
+                            Offset with the spool Tool Temperature value
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.bedOffsetEnabled" > Update Bed Offset with the spool Bed Temperature value
+                            <input type="checkbox" data-bind="checked: pluginSettings.bedOffsetEnabled"> Update Bed
+                            Offset with the spool Bed Temperature value
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.enclosureOffsetEnabled" > Update Enclosure Offset with the spool Enclosure Temperature value
+                            <input type="checkbox" data-bind="checked: pluginSettings.enclosureOffsetEnabled"> Update
+                            Enclosure Offset with the spool Enclosure Temperature value
                         </label>
-                        <span class="help-inline">HINT: You will need to reselect a spool or reconnect the printer for changes from this page to take effect.</span>
+                        <span class="help-inline">HINT: You will need to reselect a spool or reconnect the printer for
+                            changes from this page to take effect.</span>
                     </div>
                 </div>
             </div>
@@ -137,23 +149,28 @@ FPE;	2.16
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.qrCodeEnabled" > Show generated QR-Code in Spool-Dialog.
+                            <input type="checkbox" data-bind="checked: pluginSettings.qrCodeEnabled"> Show generated
+                            QR-Code in Spool-Dialog.
                         </label>
                     </div>
                 </div>
-                <hr/>
+                <hr />
                 <div class="control-group">
                     <label class="control-label">Fill color</label>
                     <div class="controls">
-{#                        <input type="text" class="input-midi text-left" data-bind="value: pluginSettings.qrCodeFillColor">#}
-                        <input id="qrcode-fill-color-picker" type="text" name="border-color" class="pick-a-color form-control input-mini">
+                        {# <input type="text" class="input-midi text-left"
+                            data-bind="value: pluginSettings.qrCodeFillColor">#}
+                        <input id="qrcode-fill-color-picker" type="text" name="border-color"
+                            class="pick-a-color form-control input-mini">
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Background color</label>
                     <div class="controls">
-{#                        <input type="text" class="input-midi text-left" data-bind="value: pluginSettings.qrCodeBackgroundColor">#}
-                        <input id="qrcode-background-color-picker" type="text" name="border-color" class="pick-a-color form-control input-mini">
+                        {# <input type="text" class="input-midi text-left"
+                            data-bind="value: pluginSettings.qrCodeBackgroundColor">#}
+                        <input id="qrcode-background-color-picker" type="text" name="border-color"
+                            class="pick-a-color form-control input-mini">
                     </div>
                 </div>
                 <div class="control-group">
@@ -161,27 +178,33 @@ FPE;	2.16
                         <button data-bind="click: reloadQRCodePreviewImage">Reload Image</button>
                     </label>
                     <div class="controls">
-                        <a data-bind="attr: $root.generateQRCodeImageSourceAttribute('qrPreviewId','qrPreviewLabel', 'htmlView')" target="_new">
-                            <img id="settings-qrimage-preview" loading="lazy" class="qr-code-large" alt="QR Code" data-bind="attr: $root.generateQRCodeImageSourceAttribute('qrPreviewId',
+                        <a data-bind="attr: $root.generateQRCodeImageSourceAttribute('qrPreviewId','qrPreviewLabel', 'htmlView')"
+                            target="_new">
+                            <img id="settings-qrimage-preview" loading="lazy" class="qr-code-large" alt="QR Code"
+                                data-bind="attr: $root.generateQRCodeImageSourceAttribute('qrPreviewId',
                                                                                                                                               'qrPreviewLabel',
                                                                                                                                               '',
                                                                                                                                               true)">
                         </a>
                     </div>
                 </div>
-                <hr/>
+                <hr />
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.qrCodeUseURLPrefix"> Use URL prefix for QR-Code URL
+                            <input type="checkbox" data-bind="checked: pluginSettings.qrCodeUseURLPrefix"> Use URL
+                            prefix for QR-Code URL
                         </label>
                     </div>
                     <div class="controls">
-                        <input type="text" class="input-xlarge text-left" data-bind="textInput: pluginSettings.qrCodeURLPrefix, enable: pluginSettings.qrCodeUseURLPrefix" placeholder="http://192.168.178.37">
+                        <input type="text" class="input-xlarge text-left"
+                            data-bind="textInput: pluginSettings.qrCodeURLPrefix, enable: pluginSettings.qrCodeUseURLPrefix"
+                            placeholder="http://192.168.178.37">
                     </div>
-                    <div class="control-label" data-bind="visible:pluginSettings.qrCodeUseURLPrefix" >
+                    <div class="control-label" data-bind="visible:pluginSettings.qrCodeUseURLPrefix">
                         <a class="text-center" target="_newTab" data-bind="attr: $root.generateQRCodeTestLink()">
-                            <span data-bind="text: pluginSettings.qrCodeURLPrefix"></span>/plugin/SpoolManager/selectSpoolByQRCode/'databaseId'
+                            <span
+                                data-bind="text: pluginSettings.qrCodeURLPrefix"></span>/plugin/SpoolManager/selectSpoolByQRCode/'databaseId'
                         </a>
                     </div>
 
@@ -193,62 +216,85 @@ FPE;	2.16
                 <div>
                     Which fields should be copied from the template spool during adding a new new spool?
                 </div>
-                <br/>
+                <br />
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('displayName')" > Display Name<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('displayName')">
+                            Display Name<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('material')" > Material<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('material')">
+                            Material<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('vendor')" > Vendor<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('vendor')">
+                            Vendor<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('density')" > Density<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('density')">
+                            Density<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('diameter')" > Diameter<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('diameter')">
+                            Diameter<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('diameterTolerance')" > Diameter Tolerance<br/>
+                            <input type="checkbox"
+                                data-bind="checked: checkExcludedFromTemplateCopy('diameterTolerance')"> Diameter
+                            Tolerance<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('flowRateCompensation')" > Flow Rate Compensation<br/>
+                            <input type="checkbox"
+                                data-bind="checked: checkExcludedFromTemplateCopy('flowRateCompensation')"> Flow Rate
+                            Compensation<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('temperature')" > Temperature<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('temperature')">
+                            Temperature<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('bedTemperature')" > Bed Temperature<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('bedTemperature')">
+                            Bed Temperature<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('enclosureTemperature')" > Enclosure Temperature<br/>
+                            <input type="checkbox"
+                                data-bind="checked: checkExcludedFromTemplateCopy('enclosureTemperature')"> Enclosure
+                            Temperature<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('offsetTemperature')" > Offset Temperature<br/>
+                            <input type="checkbox"
+                                data-bind="checked: checkExcludedFromTemplateCopy('offsetTemperature')"> Offset
+                            Temperature<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('offsetEnclosureTemperature')" > Offset Enclosure<br/>
+                            <input type="checkbox"
+                                data-bind="checked: checkExcludedFromTemplateCopy('offsetEnclosureTemperature')"> Offset
+                            Enclosure<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('totalWeight')" > Total Weight<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('totalWeight')">
+                            Total Weight<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('totalLength')" > Total Length<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('totalLength')">
+                            Total Length<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('code')" > Serialnumber<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('code')">
+                            Serialnumber<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('purchasedFrom')" > Purchased from<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('purchasedFrom')">
+                            Purchased from<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('cost')" > Cost<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('cost')">
+                            Cost<br />
                         </label>
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('allNotes')" > Notes<br/>
+                            <input type="checkbox" data-bind="checked: checkExcludedFromTemplateCopy('allNotes')">
+                            Notes<br />
                         </label>
                     </div>
                 </div>
@@ -260,12 +306,14 @@ FPE;	2.16
                 <h3>Export</h3>
                 <div class="control-group">
                     <div class="controls">
-                        <span><b>SpoolManager Database</b>: Export all data as <a target="_newTab" href="#" data-bind="attr: {href: $root.apiClient.getExportUrl('CSV')}">CSV-File</a></span>
+                        <span><b>SpoolManager Database</b>: Export all data as <a target="_newTab" href="#"
+                                data-bind="attr: {href: $root.apiClient.getExportUrl('CSV')}">CSV-File</a></span>
                     </div>
                 </div>
                 <div class="control-group" data-bind="visible: isFilamentManagerPluginAvailable">
                     <div class="controls">
-                        <span><b>Legacy: Filament Manager Database</b>: Export all data as <a target="_newTab" href="#" data-bind="attr: {href: $root.apiClient.getExportUrl('legacyFilamentManager'), css: {disabled: !$root.apiClient.getExportUrl('legacyFilamentManager')}}">CSV-File</a></span>
+                        <span><b>Legacy: Filament Manager Database</b>: Export all data as <a target="_newTab" href="#"
+                                data-bind="attr: {href: $root.apiClient.getExportUrl('legacyFilamentManager'), css: {disabled: !$root.apiClient.getExportUrl('legacyFilamentManager')}}">CSV-File</a></span>
                     </div>
                 </div>
 
@@ -273,21 +321,23 @@ FPE;	2.16
                 <h3>Import</h3>
 
                 <div class="alert" data-bind="visible: printerStateViewModel.isBusy()" style="">
-                        Take note that import functionality is disabled while your printer is printing or paused.
+                    Take note that import functionality is disabled while your printer is printing or paused.
                 </div>
                 <div class="control-group" data-bind="visible: !printerStateViewModel.isBusy()">
                     <div class="controls">
                         <div class="row">
                             Import a CSV-File to the SpoolManager database.
                         </div>
-                        <br/>
+                        <br />
                         <div class="row">
                             <div class="span6">
                                 <label class="radio">
-                                    <input type="radio" name="importCSVMode" value="replace" data-bind="checked: pluginSettings.importCSVMode"> Replace current database
+                                    <input type="radio" name="importCSVMode" value="replace"
+                                        data-bind="checked: pluginSettings.importCSVMode"> Replace current database
                                 </label>
                                 <label class="radio">
-                                        <input type="radio" name="importCSVMode" value="append" data-bind="checked: pluginSettings.importCSVMode"> Append to database
+                                    <input type="radio" name="importCSVMode" value="append"
+                                        data-bind="checked: pluginSettings.importCSVMode"> Append to database
                                 </label>
                             </div>
 
@@ -295,19 +345,17 @@ FPE;	2.16
                                 <div class="input-prepend">
                                     <span class="btn fileinput-button">
                                         <span>Browse...</span>
-                                        <input id="settings-spool-importcsv-upload"
-                                               type="file"
-                                               name="file"
-{#                                               data-url="/plugin/SpoolManager/importCSV"#}
-                                               data-url="{{ url_for("plugin.SpoolManager.importSpoolData") }}"
-                                               accept=".csv">
+                                        <input id="settings-spool-importcsv-upload" type="file" name="file"
+                                            data-url="/plugin/SpoolManager/importCSV"
+                                            data-url="{{ url_for('plugin.SpoolManager.importSpoolData') }}"
+                                            accept=".csv">
                                     </span>
                                     <span class="add-on" data-bind="text: csvFileUploadName"></span>
                                 </div>
                                 <button class="btn btn-primary"
-                                        data-bind="disable: (csvImportInProgress() || csvFileUploadName() == undefined), click: performCSVImportFromUpload">
-                                    <i class="fa fa-spinner fa-spin"
-                                       data-bind="visible: csvImportInProgress"></i> Upload & import
+                                    data-bind="disable: (csvImportInProgress() || csvFileUploadName() == undefined), click: performCSVImportFromUpload">
+                                    <i class="fa fa-spinner fa-spin" data-bind="visible: csvImportInProgress"></i>
+                                    Upload & import
                                 </button>
                             </div>
                         </div>
@@ -320,7 +368,9 @@ FPE;	2.16
                             The CSV data will be added or totaly replaced the current database.
                         </div>
                         <div>
-                            HINT: Before importing a backup file of the database will be automatically created. See Storage-Tab for more details.<!-- <a href="#tab-pjh-Storage" data-toggle="tab">storage folder</a>. -->
+                            HINT: Before importing a backup file of the database will be automatically created. See
+                            Storage-Tab for more details.
+                            <!-- <a href="#tab-pjh-Storage" data-toggle="tab">storage folder</a>. -->
                         </div>
                         <br>
                         <div>
@@ -329,7 +379,8 @@ FPE;	2.16
                                 <li>CSV-Delimiter is a comma</li>
                                 <li>You need a header row and value rows</li>
                                 <li>The order of the columns doesn't matter</li>
-                                <li>Use allowed header names for importing values (see below). Other column names will be skipped</li>
+                                <li>Use allowed header names for importing values (see below). Other column names will
+                                    be skipped</li>
                             </ul>
                             Mandatory column names:
                             <ul>
@@ -346,7 +397,9 @@ FPE;	2.16
                             </ul>
                         </div>
                         <div>
-                            Download a <a target="_newTab" href="#" data-bind="attr: {href: $root.apiClient.getSampleCSVUrl()}">sample csv</a> for a full list of all columns
+                            Download a <a target="_newTab" href="#"
+                                data-bind="attr: {href: $root.apiClient.getSampleCSVUrl()}">sample csv</a> for a full
+                            list of all columns
                         </div>
                     </div>
                 </div>
@@ -358,7 +411,7 @@ FPE;	2.16
             <div class="tab-pane" id="tab-spool-Storage">
                 <div class="control-group">
 
-<!-- Instance name is not needed for SpoolManager
+                    <!-- Instance name is not needed for SpoolManager
                     <h4>Instance Name</h4>
                     <div class="control-group" >
                         <label class="control-label" >OctoPrint Name</label>
@@ -371,9 +424,12 @@ FPE;	2.16
                     </div>
 -->
                     <!-- LOCAL DATABASE -->
-                    <h4>Local SQLite3 Database <i class='fa fa-spinner fa-spin' data-bind="visible: showLocalBusyIndicator"></i></h4>
+                    <h4>Local SQLite3 Database <i class='fa fa-spinner fa-spin'
+                            data-bind="visible: showLocalBusyIndicator"></i></h4>
                     <label class="radio">
-                        <input type="radio" name="externalDatabaseGroup" data-bind="checked: pluginSettings.useExternal, checkedValue: false"> Use local SqLite3 database
+                        <input type="radio" name="externalDatabaseGroup"
+                            data-bind="checked: pluginSettings.useExternal, checkedValue: false"> Use local SqLite3
+                        database
                     </label>
 
                     <div class="controls">
@@ -382,9 +438,14 @@ FPE;	2.16
                     <label class="control-label">Database file location</label>
                     <div class="controls">
                         <div class="input-append">
-                            <input type="text" disabled class="input-xlarge text-right" data-bind="value: pluginSettings.databaseFileLocation"/>
-                            <a href="#" class="btn btn-danger" title="ReCreate Database" data-bind="click: function() {deleteDatabaseAction('internal');}"><i class="icon-trash"></i></a>
-                            <a href="#" class="btn btn-primary" title="Download Database" data-bind="attr: {href: downloadDatabaseUrl}" target="_blank"><i class="icon-download"></i></a>
+                            <input type="text" disabled class="input-xlarge text-right"
+                                data-bind="value: pluginSettings.databaseFileLocation" />
+                            <a href="#" class="btn btn-danger" title="ReCreate Database"
+                                data-bind="click: function() {deleteDatabaseAction('internal');}"><i
+                                    class="icon-trash"></i></a>
+                            <a href="#" class="btn btn-primary" title="Download Database"
+                                data-bind="attr: {href: downloadDatabaseUrl}" target="_blank"><i
+                                    class="icon-download"></i></a>
                         </div>
                     </div>
                 </div>
@@ -398,23 +459,28 @@ FPE;	2.16
                 <div class="control-group no-bottom-gap">
                     <label class="control-label">Item count</label>
                     <div class="controls">
-                        <input type="text" disabled class="input-small text-right" data-bind="value: databaseMetaData.localSpoolItemCount" value="123">
+                        <input type="text" disabled class="input-small text-right"
+                            data-bind="value: databaseMetaData.localSpoolItemCount" value="123">
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">Scheme version</label>
                     <div class="controls">
-                        <input type="text" disabled class="input-small text-right" data-bind="value: databaseMetaData.localSchemeVersionFromDatabaseModel" value="5">
+                        <input type="text" disabled class="input-small text-right"
+                            data-bind="value: databaseMetaData.localSchemeVersionFromDatabaseModel" value="5">
                         <span>Plugin version</span>
-                        <input type="text" disabled class="input-small text-right" data-bind="value: databaseMetaData.schemeVersionFromPlugin" value="5">
+                        <input type="text" disabled class="input-small text-right"
+                            data-bind="value: databaseMetaData.schemeVersionFromPlugin" value="5">
                     </div>
                 </div>
 
-                <!-- EXTERNAL DATABASE
-                <h4>External Database <i class='fa fa-spinner fa-spin' data-bind="visible: showLocalBusyIndicator"></i></h4>
+                {# Setup postgres here #}
+                <h4>External Database <i class='fa fa-spinner fa-spin' data-bind="visible: showLocalBusyIndicator"></i>
+                </h4>
                 <label class="radio">
-                    <input type="radio" name="externalDatabaseGroup" data-bind="checked: pluginSettings.useExternal, checkedValue: true"> Use external database
+                    <input type="radio" name="externalDatabaseGroup"
+                        data-bind="checked: pluginSettings.useExternal, checkedValue: true"> Use external database
                 </label>
 
 
@@ -422,72 +488,75 @@ FPE;	2.16
                     <label class="control-label">Type</label>
                     <div class="controls">
                         <select class="input-medium" data-bind="value: pluginSettings.databaseType">
-                                <option value="postgres">PostgreSQL</option>
-                                <option value="mysql">mySQL</option>
+                            <option value="postgres">PostgreSQL</option>
+                            <option value="postgres">MySQL</option>
                         </select>
-                        <button class="btn btn-warning pull-right" data-bind="click: function() {deleteDatabaseAction('external');}" style="margin-right: 80px;">ReCreate database</button>
+                        <button class="btn btn-warning pull-right"
+                            data-bind="click: function() {deleteDatabaseAction('external');}"
+                            style="margin-right: 80px;">ReCreate database</button>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Host</label>
                     <div class="controls">
-                        <input type="text" data-bind="value: pluginSettings.databaseHost"/>
-                        <button class="btn btn-info pull-right" data-bind="click: testDatabaseConnection" style="margin-right: 80px;">Test connection</button>
+                        <input type="text" data-bind="value: pluginSettings.databaseHost" />
+                        <button class="btn btn-info pull-right" data-bind="click: testDatabaseConnection"
+                            style="margin-right: 80px;">Test connection</button>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Port</label>
                     <div class="controls">
-                        <input type="text" data-bind="value: pluginSettings.databasePort"/>
+                        <input type="text" data-bind="value: pluginSettings.databasePort" />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Database Name</label>
                     <div class="controls">
-                        <input type="text" data-bind="value: pluginSettings.databaseName"/>
+                        <input type="text" data-bind="value: pluginSettings.databaseName" />
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">User</label>
                     <div class="controls">
-                        <input type="text" data-bind="value: pluginSettings.databaseUser"/>
+                        <input type="text" data-bind="value: pluginSettings.databaseUser" />
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label">Password</label>
                     <div class="controls">
-                        <input type="password" data-bind="value: pluginSettings.databasePassword"/>
+                        <input type="password" data-bind="value: pluginSettings.databasePassword" />
                     </div>
                 </div>
 
                 <div class="control-group no-bottom-gap">
                     <label class="control-label">Item count</label>
                     <div class="controls">
-                        <input type="text" disabled class="input-small text-right" data-bind="value: databaseMetaData.externalSpoolItemCount" value="123">
+                        <input type="text" disabled class="input-small text-right"
+                            data-bind="value: databaseMetaData.externalSpoolItemCount" value="123">
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">Scheme version</label>
                     <div class="controls">
-                        <input type="text" disabled class="input-small text-right" data-bind="value: databaseMetaData.externalSchemeVersionFromDatabaseModel" value="5">
+                        <input type="text" disabled class="input-small text-right"
+                            data-bind="value: databaseMetaData.externalSchemeVersionFromDatabaseModel" value="5">
                         <span>Plugin version</span>
-                        <input type="text" disabled class="input-small text-right" data-bind="value: databaseMetaData.schemeVersionFromPlugin" value="5">
+                        <input type="text" disabled class="input-small text-right"
+                            data-bind="value: databaseMetaData.schemeVersionFromPlugin" value="5">
                     </div>
                 </div>
-                -->
+
                 <div class="help-block" data-bind="visible: showDatabaseErrorMessage">
-                    <span style="color: red; "><b><div data-bind="text: databaseErrorMessage"></div></b></span>
+                    <span style="color: red; "><b>
+                            <div data-bind="text: databaseErrorMessage"></div>
+                        </b></span>
                 </div>
                 <div class="help-block" data-bind="visible: showSuccessMessage">
                     <font color="green"><b>Database connection successful</b></font>
                 </div>
-                <!-- TODO add
-                <div class="help-block" data-bind="visible: showUpdateSchemeMessage">
-                    <font color="orange"><b>Databasescheme doesn't match with required scheme version. Please do an <a target="newTab" href="https://github.com/OllisGit/OctoPrint-SpoolManager/wiki/Roadmap-to-an-external-Database">update</a>!</b></font>
-                </div>
-                -->
             </div>
 
             <!-- DEBUGGING - TAB -->
@@ -495,15 +564,18 @@ FPE;	2.16
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.sqlLoggingEnabled" > SQL Logging enabled
+                            <input type="checkbox" data-bind="checked: pluginSettings.sqlLoggingEnabled"> SQL Logging
+                            enabled
                         </label>
-                        <span class="help-inline">Hint: You need to restart your server after you changed the checkbox value.</span>
+                        <span class="help-inline">Hint: You need to restart your server after you changed the checkbox
+                            value.</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="controls">
                         <label class="checkbox">
-                            <input type="checkbox" data-bind="checked: pluginSettings.extrusionDebuggingEnabled" > Extrusion debugging enabled
+                            <input type="checkbox" data-bind="checked: pluginSettings.extrusionDebuggingEnabled">
+                            Extrusion debugging enabled
                         </label>
                         <span class="help-inline">Hint: Could slow down your print.</span>
                     </div>
@@ -514,5 +586,3 @@ FPE;	2.16
     </div>
 
 </form>
-
-
