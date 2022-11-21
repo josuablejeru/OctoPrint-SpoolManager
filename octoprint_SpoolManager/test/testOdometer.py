@@ -2,7 +2,6 @@ import logging
 import unittest
 
 from octoprint_SpoolManager import NewFilamentOdometer
-from octoprint_SpoolManager.Odometer import FilamentOdometer
 
 
 class TestOdometer(unittest.TestCase):
@@ -13,7 +12,6 @@ class TestOdometer(unittest.TestCase):
         testLogger = logging.getLogger("testLogger")
         logging.info("Start Odometer-Test")
 
-        self.filamentOdometer = FilamentOdometer()
         self.myFilamentOdometer = NewFilamentOdometer()
         # filename = "/Users/o0632/0_Projekte/3DDruck/OctoPrint/OctoPrint-FilamentManager/issues/issue24/Ornaments.01_colored.gcode"
         filename = "/Users/o0632/0_Projekte/3DDruck/OctoPrint/GitHub-Issues/FilamentManager/issue24/LeftAnchorBlock_0.2mm_ABS_MK3SMMU2S_12h19m.gcode"
@@ -61,11 +59,6 @@ class TestOdometer(unittest.TestCase):
         print(filename)
         print("Old-Implementation")
         for total in extrusion:
-			print(total + " " + str(extrusion[total].totalExtrusion))
+            print(total + " " + str(extrusion[total].totalExtrusion))
         print("New-Implementation")
         print(myExtrusion)
-
-if __name__ == '__main__':
-	print("Start Odometer Test")
-	unittest.main()
-	print("Finished")
