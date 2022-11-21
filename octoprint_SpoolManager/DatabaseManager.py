@@ -56,11 +56,6 @@ class DatabaseManager:
                 database = PostgresqlDatabase(
                     databaseName, user=user, password=password, host=host, port=port
                 )
-            else:
-                # Connect to a MySQL database on network.
-                database = MySQLDatabase(
-                    databaseName, user=user, password=password, host=host, port=port
-                )
 
         return database
 
@@ -68,96 +63,8 @@ class DatabaseManager:
         if forceCreateTables:
             self._logger.info("Creating new database-tables, because FORCE == TRUE!")
             self._createDatabaseTables()
-        else:
-            # check, if we need an scheme upgrade
-            self._createOrUpgradeSchemeIfNecessary()
 
         self._logger.info("Database created-check done")
-
-    def _createOrUpgradeSchemeIfNecessary(self):
-        self._logger.info("Check if database-scheme upgrade needed...")
-        schemeVersionFromDatabaseModel = None
-        schemeVersionFromDatabase = None
-        try:
-            cursor = self.db.execute_sql(
-                'select "value" from "spo_pluginmetadatamodel" where key="'
-                + PluginMetaDataModel.KEY_DATABASE_SCHEME_VERSION
-                + '";'
-            )
-            result = cursor.fetchone()
-            if result != None:
-                schemeVersionFromDatabase = int(result[0])
-                self._logger.info(
-                    "Current databasescheme: " + str(schemeVersionFromDatabase)
-                )
-            else:
-                self._logger.warn(
-                    "Strange, table is found (maybe), but there is no result of the schem version. Try to recreate a new db-scheme"
-                )
-                self.backupDatabaseFile()  # safty first
-                self._createDatabaseTables()
-                return
-            pass
-        except Exception as e:
-            self._logger.exception(e)
-            self.closeDatabase()
-            errorMessage = str(e)
-            if (
-                # - SQLLite
-                errorMessage.startswith("no such table")
-                or
-                # - Postgres
-                "does not exist" in errorMessage
-                or
-                # - mySQL errorcode=1146
-                "doesn't exist" in errorMessage
-            ):
-                self._createDatabaseTables()
-                return
-            else:
-                self._logger.error(str(e))
-
-        if not schemeVersionFromDatabase == None:
-            currentDatabaseSchemeVersion = schemeVersionFromDatabase
-            if currentDatabaseSchemeVersion < CURRENT_DATABASE_SCHEME_VERSION:
-                # auto upgrade done only for local database
-                if self._databaseSettings.useExternal == True:
-                    self._logger.warn("Scheme upgrade is only done for local database")
-                    return
-
-                # evautate upgrade steps (from 1-2 , 1...6)
-                self._logger.info(
-                    "We need to upgrade the database scheme from: '"
-                    + str(currentDatabaseSchemeVersion)
-                    + "' to: '"
-                    + str(CURRENT_DATABASE_SCHEME_VERSION)
-                    + "'"
-                )
-
-                try:
-                    self.backupDatabaseFile()
-                    self._upgradeDatabase(
-                        currentDatabaseSchemeVersion, CURRENT_DATABASE_SCHEME_VERSION
-                    )
-                except Exception as e:
-                    self._logger.error("Error during database upgrade!!!!")
-                    self._logger.exception(e)
-                    return
-                self._logger.info("...Database-scheme successfully upgraded.")
-            else:
-                self._logger.info("...Database-scheme upgraded not needed.")
-        else:
-            self._logger.warn(
-                "...something was strange. Should not be shwon in log. Check full log"
-            )
-        pass
-
-    def _executeSQLQuietly(self, cursor, sqlStatement):
-        try:
-            cursor.execute(sqlStatement)
-        except Exception as e:
-            self._logger.error(sqlStatement)
-            self._logger.exception(e)
 
     def _createDatabaseTables(self):
         self._logger.info("Creating new database tables for spoolmanager-plugin")
@@ -182,7 +89,6 @@ class DatabaseManager:
         if sendErrorPopUp == True:
             self._passMessageToClient(type, title, message)
 
-    ################################################################################################### public functions
     @staticmethod
     def buildDefaultDatabaseFileLocation(pluginDataBaseFolder):
         databaseFileLocation = os.path.join(pluginDataBaseFolder, "spoolmanager.db")
@@ -206,8 +112,6 @@ class DatabaseManager:
             + "' exists: "
             + existsDatabaseFile
         )
-
-        import logging
 
         logger = logging.getLogger("peewee")
         # we need only the single logger without parent
@@ -279,17 +183,6 @@ class DatabaseManager:
                 self._logger.info(
                     "Database connection succesful. Checking Scheme versions"
                 )
-            # TODO do I realy need to check the meta-infos in the connect function
-            # schemeVersionFromPlugin = str(CURRENT_DATABASE_SCHEME_VERSION)
-            # schemeVersionFromDatabaseModel = str(PluginMetaDataModel.get(PluginMetaDataModel.key == PluginMetaDataModel.KEY_DATABASE_SCHEME_VERSION).value)
-            # if (schemeVersionFromPlugin != schemeVersionFromDatabaseModel):
-            # 	errorMessage = "Plugin needs database scheme version: "+str(schemeVersionFromPlugin)+", but database has version: "+str(schemeVersionFromDatabaseModel);
-            # 	self._storeErrorMessage("error", "database scheme version", errorMessage , False)
-            # 	self._logger.error(errorMessage)
-            # 	self._isConnected = False
-            # else:
-            # 	self._logger.info("...succesfull connected")
-            # 	self._isConnected = True
             self._isConnected = True
         except Exception as e:
             errorMessage = str(e)
@@ -329,7 +222,6 @@ class DatabaseManager:
             self._sqlLogger.setLevel(logging.ERROR)
 
     def backupDatabaseFile(self):
-
         if os.path.exists(self._databaseSettings.fileLocation):
             self._logger.info("Starting database backup")
             now = datetime.datetime.now()

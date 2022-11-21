@@ -12,7 +12,7 @@ from octoprint_SpoolManager.common.EventBusKeys import EventBusKeys
 from octoprint_SpoolManager.common.SettingsKeys import SettingsKeys
 from octoprint_SpoolManager.DatabaseManager import DatabaseManager
 from octoprint_SpoolManager.db import DatabaseSettings
-from octoprint_SpoolManager.newodometer import NewFilamentOdometer
+from octoprint_SpoolManager.filament_odometer import FilamentOdometer
 
 
 class SpoolmanagerPlugin(
@@ -24,6 +24,11 @@ class SpoolmanagerPlugin(
     octoprint.plugin.StartupPlugin,
     octoprint.plugin.EventHandlerPlugin,
 ):
+    def __init__(self, filament_odometer: FilamentOdometer) -> None:
+        super().__init__()
+
+        self.myFilamentOdometer = filament_odometer
+
     def initialize(self):
         self._logger.info("Start initializing")
 
@@ -39,7 +44,7 @@ class SpoolmanagerPlugin(
         # init database
         self._databaseManager.initDatabase(databaseSettings, self._sendMessageToClient)
 
-        self.myFilamentOdometer = NewFilamentOdometer(self._extrusionValuesChanged)
+        self.myFilamentOdometer.set_extrusion_changed_listener(self._extrusionValuesChanged)
         self.myFilamentOdometer.set_g90_extruder(
             self._settings.get_boolean(["feature", "g90InfluencesExtruder"])
         )
@@ -246,8 +251,6 @@ class SpoolmanagerPlugin(
                     action="extrusionValuesChanged", extrusionValues=newExtrusionValues
                 )
             )
-
-        pass
 
     def _readingFilamentMetaData(self):
         filamentLengthPresentInMeta = False
@@ -520,31 +523,6 @@ class SpoolmanagerPlugin(
     # - PAUSED
     # - STARTING
     # - PRINTING
-    # def _on_printer_state_changed(self, payload):
-    # 	printerState = payload['state_id']
-    # 	print("######################  " +str(printerState))
-    # 	if payload['state_id'] == "PRINTING":
-    # 		if self._lastPrintState == "PAUSED":
-    # 			# resuming print
-    # 			self.filamentOdometer.reset_extruded_length()
-    # 		else:
-    # 			# starting new print
-    # 			self.filamentOdometer.reset()
-    # 		self.odometerEnabled = self._settings.getBoolean(["enableOdometer"])
-    # 		self.pauseEnabled = self._settings.getBoolean(["autoPause"])
-    # 		self._logger.debug("Printer State: %s" % payload["state_string"])
-    # 		self._logger.debug("Odometer: %s" % ("On" if self.odometerEnabled else "Off"))
-    # 		self._logger.debug("AutoPause: %s" % ("On" if self.pauseEnabled and self.odometerEnabled else "Off"))
-    # 	elif self._lastPrintState == "PRINTING":
-    # 		# print state changed from printing => update filament usage
-    # 		self._logger.debug("Printer State: %s" % payload["state_string"])
-    # 		if self.odometerEnabled:
-    # 			self.odometerEnabled = False  # disabled because we don't want to track manual extrusion
-    #
-    # 			self.currentExtrusion = self.filamentOdometer.get_extrusion()
-    #
-    # 	# update last print state
-    # 	self._lastPrintState = payload['state_id']
 
     def _on_printJobStarted(self):
         # starting new print
@@ -777,19 +755,7 @@ class SpoolmanagerPlugin(
         self._checkForMissingPluginInfos()
         pass
 
-    def on_sentGCodeHook(
-        self, comm_instance, phase, cmd, cmd_type, gcode, *args, **kwargs
-    ):
-        """
-        Listen to all g-code which where already sent to the printer
-        (thread: comm.sending_thread)
-        """
 
-        # TODO maybe later via a queue
-        self.myFilamentOdometer.processGCodeLine(cmd)
-        # if self.pauseEnabled and self.check_threshold():
-        # 	self._logger.info("Filament is running out, pausing print")
-        # 	self._printer.pause_print()
 
     def on_event(self, event, payload):
         if Events.CLIENT_OPENED == event:
@@ -1014,48 +980,3 @@ class SpoolmanagerPlugin(
             less=["less/SpoolManager.less"],
         )
 
-    def get_update_information(self):
-        """
-        Software update hook
-        """
-        # Define the configuration for your plugin to use with the Software Update
-        # Plugin here. See https://github.com/foosel/OctoPrint/wiki/Plugin:-Software-Update
-        # for details.
-        return dict(
-            SpoolManager=dict(
-                displayName="SpoolManager Plugin",
-                displayVersion=self._plugin_version,
-                # version check: github repository
-                type="github_release",
-                user="OllisGit",
-                repo="OctoPrint-SpoolManager",
-                current=self._plugin_version,
-                # Release channels
-                stable_branch=dict(
-                    name="Only Release", branch="master", comittish=["master"]
-                ),
-                prerelease_branches=[
-                    dict(
-                        name="Release & Candidate",
-                        branch="pre-release",
-                        comittish=["pre-release", "master"],
-                    ),
-                    dict(
-                        name="Release & Candidate & under Development",
-                        branch="development",
-                        comittish=["development", "pre-release", "master"],
-                    ),
-                ],
-                # update method: pip
-                pip="https://github.com/OllisGit/OctoPrint-SpoolManager/releases/download/{target_version}/master.zip",
-            )
-        )
-
-    def register_custom_events(*args, **kwargs):
-        return [
-            EventBusKeys.EVENT_BUS_SPOOL_WEIGHT_UPDATED_AFTER_PRINT,
-            EventBusKeys.EVENT_BUS_SPOOL_SELECTED,
-            EventBusKeys.EVENT_BUS_SPOOL_DESELECTED,
-            EventBusKeys.EVENT_BUS_SPOOL_ADDED,
-            EventBusKeys.EVENT_BUS_SPOOL_DELETED,
-        ]

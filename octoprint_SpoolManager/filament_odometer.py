@@ -1,20 +1,18 @@
 # coding=utf-8
-from __future__ import absolute_import
-
 import math
 
 
-class NewFilamentOdometer(object):
+class FilamentOdometer:
     """
     copied from gcodeinterpreter.py Version OP 1.5.2
     """
 
     def __init__(self, extrusionChangedListener=None):
-        # self._logger = logging.getLogger(__name__)
         self.extrusionChangedListener = extrusionChangedListener
-        self.max_extruders = 10
-        self.g90_extruder = False
-        self.reset()
+        self._set_default_extusion_values()
+
+    def set_extrusion_changed_listener(self, extrusion_changed_listener):
+        self.extrusionChangedListener = extrusion_changed_listener
 
     def set_g90_extruder(self, flag=False):
         self.g90_extruder = flag
@@ -28,6 +26,11 @@ class NewFilamentOdometer(object):
         self.relativeMode = False
         self.duplicationMode = False
         self._fireExtrusionChangedEvent()
+
+    def _set_default_extusion_values(self):
+        self.max_extruders = 10
+        self.g90_extruder = False
+        self.reset()
 
     def reset_extruded_length(self):
         """
