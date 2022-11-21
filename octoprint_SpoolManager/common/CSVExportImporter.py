@@ -1,11 +1,10 @@
 # coding=utf-8
 
-import io
-from io import StringIO
 import csv
 import datetime
 import os
 import re
+from io import StringIO
 
 from octoprint_SpoolManager.common import StringUtils
 from octoprint_SpoolManager.models.SpoolModel import SpoolModel
@@ -90,9 +89,6 @@ class CSVColumn:
                 + "': "
                 + errorMessage
             )
-
-
-############################################################################################## ALL FORMATTOR AND PARSERS
 
 
 class DefaultCSVFormattorParser:
@@ -361,15 +357,11 @@ ALL_COLUMNS = {
 }
 
 
-####################################################################################################### -> EXPORT TO CSV
-
-
 def transform2CSV(allJobs):
     result = None
     si = (
         StringIO()
     )  # TODO maybe a bad idea to use a internal memory based string, needs to be switched to response stream
-    # si = io.BytesIO()
 
     writer = csv.writer(si, quoting=csv.QUOTE_ALL)
     #  Write HEADER
@@ -525,7 +517,6 @@ def parseCSV(
     return result
 
 
-######################################################################################################## -> SAMPLE SPOOL
 def createSampleSpoolModel():
     # DisplayName, Vendor, Material, Color[# code], Diameter [mm], Density [g/cm³], Temperature [°C], TotalWeight [g], UsedWeight [g], UsedLength [mm], FirstUse [dd.mm.yyyy hh:mm], LastUse [dd.mm.yyyy hh:mm], PurchasedFrom, PurchasedOn [dd.mm.yyyy hh:mm], Cost, CostUnit, Labels, NoteText
 

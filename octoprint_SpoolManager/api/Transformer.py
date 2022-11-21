@@ -1,8 +1,6 @@
 # coding=utf-8
-from __future__ import absolute_import
-
-from octoprint_SpoolManager.models.SpoolModel import SpoolModel
 from octoprint_SpoolManager.common import StringUtils
+from octoprint_SpoolManager.models.SpoolModel import SpoolModel
 
 
 def calculateRemainingWeight(usedWeight, totalWeight):
@@ -59,8 +57,8 @@ def transformSpoolModelToDict(spoolModel):
     spoolAsDict["created"] = StringUtils.formatDateTime(spoolModel.created)
     spoolAsDict["updated"] = StringUtils.formatDateTime(spoolModel.updated)
 
-    totalWeight = spoolModel.totalWeight
-    usedWeight = spoolModel.usedWeight
+    totalWeight = spoolModel.totalWeightInGram
+    usedWeight = spoolModel.usedWeightInGram
     remainingWeight = calculateRemainingWeight(usedWeight, totalWeight)
     remainingPercentage = _calculateUsedPercentage(remainingWeight, totalWeight)
     usedPercentage = _calculateUsedPercentage(usedWeight, totalWeight)
@@ -70,12 +68,12 @@ def transformSpoolModelToDict(spoolModel):
     spoolAsDict["usedPercentage"] = StringUtils.formatFloat(usedPercentage)
 
     # Decimal and date time needs to be converted. ATTENTION orgiginal fields will be modified
-    spoolAsDict["totalWeight"] = StringUtils.formatFloat(spoolModel.totalWeight)
-    spoolAsDict["spoolWeight"] = StringUtils.formatFloat(spoolModel.spoolWeight)
-    spoolAsDict["usedWeight"] = StringUtils.formatFloat(spoolModel.usedWeight)
+    spoolAsDict["totalWeight"] = StringUtils.formatFloat(spoolModel.totalWeightInGram)
+    spoolAsDict["spoolWeight"] = StringUtils.formatFloat(spoolModel.spoolWeightInGram)
+    spoolAsDict["usedWeight"] = StringUtils.formatFloat(spoolModel.usedWeightInGram)
 
-    usedLength = spoolModel.usedLength
-    totalLength = spoolModel.totalLength
+    usedLength = spoolModel.usedLengthInMM
+    totalLength = spoolModel.totalLengthInMM
     remainingLength = calculateRemainingWeight(usedLength, totalLength)
     remainingLengthPercentage = _calculateUsedPercentage(remainingLength, totalLength)
     usedLengthPercentage = _calculateUsedPercentage(usedLength, totalLength)
@@ -85,12 +83,6 @@ def transformSpoolModelToDict(spoolModel):
         remainingLengthPercentage
     )
     spoolAsDict["usedLengthPercentage"] = StringUtils.formatInt(usedLengthPercentage)
-
-    # spoolAsDict["temperature"] = StringUtils.formatSave("{:.02f}", spoolAsDict["temperature"], "")
-    # spoolAsDict["weight"] = StringUtils.formatSave("{:.02f}", spoolAsDict["weight"], "")
-    # spoolAsDict["remainingWeight"] = StringUtils.formatSave("{:.02f}", spoolAsDict["remainingWeight"], "")
-    # spoolAsDict["usedLength"] = StringUtils.formatSave("{:.02f}", spoolAsDict["usedLength"], "")
-    # spoolAsDict["usedLength"] = StringUtils.formatSave("{:.02f}", spoolAsDict["usedLength"], "")
 
     return spoolAsDict
 

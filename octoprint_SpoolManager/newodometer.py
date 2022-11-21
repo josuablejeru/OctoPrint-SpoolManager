@@ -3,10 +3,12 @@ from __future__ import absolute_import
 
 import math
 
+
 class NewFilamentOdometer(object):
     """
     copied from gcodeinterpreter.py Version OP 1.5.2
     """
+
     def __init__(self, extrusionChangedListener=None):
         # self._logger = logging.getLogger(__name__)
         self.extrusionChangedListener = extrusionChangedListener

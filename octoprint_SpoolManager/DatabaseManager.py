@@ -1,18 +1,17 @@
 # coding=utf-8
 import datetime
 import json
-import os
 import logging
+import os
 import shutil
 
-from octoprint_SpoolManager.WrappedLoggingHandler import WrappedLoggingHandler
 from peewee import *
 
 from octoprint_SpoolManager.api import Transformer
 from octoprint_SpoolManager.common import StringUtils
 from octoprint_SpoolManager.models.PluginMetaDataModel import PluginMetaDataModel
 from octoprint_SpoolManager.models.SpoolModel import SpoolModel
-
+from octoprint_SpoolManager.WrappedLoggingHandler import WrappedLoggingHandler
 
 FORCE_CREATE_TABLES = False
 
@@ -227,10 +226,6 @@ class DatabaseManager:
         logger = logging.getLogger("peewee")
         # we need only the single logger without parent
         logger.parent = None
-        # logger.addHandler(logging.StreamHandler())
-        # activate SQL logging on PEEWEE side and on PLUGIN side
-        # logger.setLevel(logging.DEBUG)
-        # self._sqlLogger.setLevel(logging.DEBUG)
         self.showSQLLogging(self.sqlLoggingEnabled)
 
         wrappedHandler = WrappedLoggingHandler(self._sqlLogger)
@@ -641,16 +636,16 @@ class DatabaseManager:
             else:
                 if filterName == "hideEmptySpools":
                     myQuery = myQuery.where(
-                        (SpoolModel.remainingWeight > 0)
-                        | (SpoolModel.remainingWeight == None)
+                        (spoolModel.remainingWeightInGram > 0)
+                        | (spoolModel.remainingWeightInGram == None)
                     )
                 if filterName == "hideInactiveSpools":
                     myQuery = myQuery.where((SpoolModel.isActive == True))
                 if filterName == "hideEmptySpools,hideInactiveSpools":
                     myQuery = myQuery.where(
                         (
-                            (SpoolModel.remainingWeight > 0)
-                            | (SpoolModel.remainingWeight == None)
+                            (spoolModel.remainingWeightInGram > 0)
+                            | (spoolModel.remainingWeightInGram == None)
                         )
                         & (SpoolModel.isActive == True)
                     )
@@ -672,9 +667,9 @@ class DatabaseManager:
                     myQuery = myQuery.order_by(SpoolModel.firstUse.asc())
             if "remaining" == sortColumn:
                 if "desc" == sortOrder:
-                    myQuery = myQuery.order_by(SpoolModel.remainingWeight.desc())
+                    myQuery = myQuery.order_by(spoolModel.remainingWeightInGram.desc())
                 else:
-                    myQuery = myQuery.order_by(SpoolModel.remainingWeight.asc())
+                    myQuery = myQuery.order_by(spoolModel.remainingWeightInGram.asc())
             if "material" == sortColumn:
                 if "desc" == sortOrder:
                     myQuery = myQuery.order_by(SpoolModel.material.desc())
@@ -750,15 +745,15 @@ class DatabaseManager:
             return databaseId
 
         # always recalculate the remaing weight (total - used)
-        totalWeight = spoolModel.totalWeight
-        usedWeight = spoolModel.usedWeight
+        totalWeight = spoolModel.totalWeightInGram
+        usedWeight = spoolModel.usedWeightInGram
         if totalWeight != None:
             if usedWeight == None:
                 usedWeight = 0.0
             remainingWeight = Transformer.calculateRemainingWeight(
                 usedWeight, totalWeight
             )
-            spoolModel.remainingWeight = remainingWeight
+            spoolModel.remainingWeightInGram = remainingWeight
 
         return self._handleReusableConnection(
             databaseCallMethode, withReusedConnection, "saveSpool"

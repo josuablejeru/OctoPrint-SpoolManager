@@ -1,13 +1,17 @@
 # coding=utf-8
-from __future__ import absolute_import
-
 import datetime
 import re
+import sys
+from datetime import timedelta
+from string import Formatter
 
-# see https://www.safaribooksonline.com/library/view/python-cookbook-2nd/0596007973/ch01s19.html
+from past.builtins import basestring, unicode
 
 
 def multiple_replace(text, adict):
+    """
+    see https://www.safaribooksonline.com/library/view/python-cookbook-2nd/0596007973/ch01s19.html
+    """
     rx = re.compile("|".join(map(re.escape, adict)))
 
     def one_xlat(match):
@@ -16,8 +20,10 @@ def multiple_replace(text, adict):
     return rx.sub(one_xlat, text)
 
 
-# see https://stackoverflow.com/questions/4048651/python-function-to-convert-seconds-into-minutes-hours-and-days/4048773
 def secondsToText(secs):
+    """
+    https://stackoverflow.com/questions/4048651/python-function-to-convert-seconds-into-minutes-hours-and-days/4048773
+    """
     days = secs // 86400
     hours = (secs - days * 86400) // 3600
     minutes = (secs - days * 86400 - hours * 3600) // 60
@@ -32,16 +38,13 @@ def secondsToText(secs):
     return result
 
 
-from string import Formatter
-from datetime import timedelta
-
-# see https://stackoverflow.com/questions/538666/python-format-timedelta-to-string
 def formatTimeDelta(
     tdelta, fmt="{D:02}d {H:02}h {M:02}m {S:02}s", inputtype="timedelta"
 ):
-    if type(tdelta) is not timedelta:
-        return ""
-    """Convert a datetime.timedelta object or a regular number to a custom-
+    """
+    see https://stackoverflow.com/questions/538666/python-format-timedelta-to-string
+
+    Convert a datetime.timedelta object or a regular number to a custom-
     formatted string, just like the stftime() method does for datetime.datetime
     objects.
 
@@ -62,6 +65,8 @@ def formatTimeDelta(
         'd', 'days',
         'w', 'weeks'
     """
+    if type(tdelta) is not timedelta:
+        return ""
 
     # Convert tdelta to integer seconds.
     if inputtype == "timedelta":
@@ -149,8 +154,10 @@ def formatSave(pattern, value, defaultString):
     return pattern.format(value)
 
 
-# result is a string: "15.11.2020 20:21"
 def formatDateTime(dateTimeValue):
+    """
+    result is a string: "15.11.2020 20:21"
+    """
     result = ""
     if dateTimeValue != None:
         if type(dateTimeValue) is datetime.datetime:
@@ -188,8 +195,10 @@ def formatInt(intValue):
     return result
 
 
-# input: dd.mm.yyyy hh:mm -> return: datetime-object or None if the format is not valid
 def transformToDateTimeOrNone(dateTimeString):
+    """
+    input: dd.mm.yyyy hh:mm -> return: datetime-object or None if the format is not valid
+    """
     if dateTimeString != None and len(dateTimeString) != 0:
         index = dateTimeString.find(" ")
         if index != -1:
@@ -198,8 +207,10 @@ def transformToDateTimeOrNone(dateTimeString):
     return None
 
 
-# input: YYYY-MM-DDTHH:mm -> return: datetime-object or None if the format is not valid
 def transformFromIsoToDateTimeOrNone(dateTimeString):
+    """
+    input: YYYY-MM-DDTHH:mm -> return: datetime-object or None if the format is not valid
+    """
     if dateTimeString != None and len(dateTimeString) != 0:
         index = dateTimeString.find("T")
         if index != -1:
@@ -216,12 +227,6 @@ def isEmpty(value):
 
 def isNotEmpty(value):
     return isEmpty(value) == False
-
-
-#################### START: copied from octorprint 1.4.x for 1.3.x compatible reason
-
-import sys
-from past.builtins import basestring, unicode
 
 
 def to_bytes(s_or_u, encoding="utf-8", errors="strict"):
@@ -261,41 +266,3 @@ def to_native_str(s_or_u):
         return to_bytes(s_or_u)
     else:
         return to_unicode(s_or_u)
-
-
-# f = "0";
-# print(formatFloat(f))
-# value = "  1   "
-#
-# result = isEmpty(value)
-# print result
-
-### TEST-ZONE
-# day = 0
-# hour = 0
-# minute = 1
-# second = 31
-
-# seconds = day * 24 * 60 * 60 +  hour * 60 * 60 +  minute * 60  + second
-# print(secondsToText(None, seconds) )
-"""
-from datetime import datetime
-start_datetime_str = '09/10/18 13:55:26'
-end_datetime_str = '09/20/18 14:56:35'
-start_datetime_object = datetime.strptime(start_datetime_str, '%m/%d/%y %H:%M:%S')
-end_datetime_object = datetime.strptime(end_datetime_str, '%m/%d/%y %H:%M:%S')
-
-duration = end_datetime_object - start_datetime_object
-
-print(compactTimeDeltaFormatter(duration))
-print(formatTimeDelta(duration))
-"""
-
-# stingDateTime = "2020-05-31T22:00:00.000Z"
-#
-# myDateTime = datetime.datetime.strptime(stingDateTime, "%Y-%m-%dT%H:%M:%S.%fZ")
-# print(myDateTime)
-
-# dateValue = "2020-12-03T13:12"
-# datObject = transformFromIsoToDateTimeOrNone(dateValue)
-# print(datObject)

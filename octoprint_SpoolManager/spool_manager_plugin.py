@@ -1,19 +1,17 @@
 import math
 from datetime import datetime
+
 import flask
 import octoprint.plugin
 from octoprint.events import Events
 
-from octoprint_SpoolManager.DatabaseManager import DatabaseManager
-
-
-from octoprint_SpoolManager.newodometer import NewFilamentOdometer
-
 from octoprint_SpoolManager.api import Transformer
 from octoprint_SpoolManager.api.SpoolManagerAPI import SpoolManagerAPI
 from octoprint_SpoolManager.common import StringUtils
-from octoprint_SpoolManager.common.SettingsKeys import SettingsKeys
 from octoprint_SpoolManager.common.EventBusKeys import EventBusKeys
+from octoprint_SpoolManager.common.SettingsKeys import SettingsKeys
+from octoprint_SpoolManager.DatabaseManager import DatabaseManager
+from octoprint_SpoolManager.newodometer import NewFilamentOdometer
 
 
 class SpoolmanagerPlugin(
@@ -305,8 +303,8 @@ class SpoolmanagerPlugin(
             if selectedSpool != None:
                 diameter = selectedSpool.diameter
                 density = selectedSpool.density
-                totalWeight = selectedSpool.totalWeight
-                usedWeight = selectedSpool.usedWeight
+                totalWeight = selectedSpool.totalWeightInGram
+                usedWeight = selectedSpool.usedWeightInGram
 
                 # need attributes present: diameter, density, totalWeight
                 missing_fields = []
@@ -757,7 +755,7 @@ class SpoolmanagerPlugin(
                     "colorName": spoolModel.colorName,
                     "color": spoolModel.color,
                     "cost": spoolModel.cost,
-                    "weight": spoolModel.totalWeight,
+                    "weight": spoolModel.totalWeightInGram,
                 }
             result.append(spoolData)
 
