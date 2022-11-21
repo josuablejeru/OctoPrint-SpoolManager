@@ -13,6 +13,8 @@ from octoprint_SpoolManager.models.PluginMetaDataModel import PluginMetaDataMode
 from octoprint_SpoolManager.models.SpoolModel import SpoolModel
 from octoprint_SpoolManager.WrappedLoggingHandler import WrappedLoggingHandler
 
+from .db import DatabaseSettings
+
 FORCE_CREATE_TABLES = False
 
 CURRENT_DATABASE_SCHEME_VERSION = 7
@@ -22,22 +24,6 @@ MODELS = [PluginMetaDataModel, SpoolModel]
 
 
 class DatabaseManager:
-    class DatabaseSettings:
-        # Internal stuff
-        baseFolder = ""
-        fileLocation = ""
-        # External stuff
-        useExternal = False
-        type = "postgresql"  # postgresql,  mysql NOT sqlite
-        name = ""
-        host = ""
-        port = 0
-        user = ""
-        password = ""
-
-        def __str__(self):
-            return str(self.__dict__)
-
     def __init__(self, parentLogger, sqlLoggingEnabled):
         self.sqlLoggingEnabled = sqlLoggingEnabled
         self._logger = logging.getLogger(

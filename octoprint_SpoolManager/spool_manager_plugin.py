@@ -11,6 +11,7 @@ from octoprint_SpoolManager.common import StringUtils
 from octoprint_SpoolManager.common.EventBusKeys import EventBusKeys
 from octoprint_SpoolManager.common.SettingsKeys import SettingsKeys
 from octoprint_SpoolManager.DatabaseManager import DatabaseManager
+from octoprint_SpoolManager.db import DatabaseSettings
 from octoprint_SpoolManager.newodometer import NewFilamentOdometer
 
 
@@ -455,7 +456,7 @@ class SpoolmanagerPlugin(
         return result
 
     def _buildDatabaseSettingsFromPluginSettings(self):
-        databaseSettings = DatabaseManager.DatabaseSettings()
+        databaseSettings = DatabaseSettings()
         databaseSettings.useExternal = self._settings.get(
             [SettingsKeys.SETTINGS_KEY_DATABASE_USE_EXTERNAL]
         )
