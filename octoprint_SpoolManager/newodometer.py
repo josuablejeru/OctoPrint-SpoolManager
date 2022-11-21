@@ -3,9 +3,10 @@ from __future__ import absolute_import
 
 import math
 
-# import logging
-# copied from gcodeinterpreter.py Version OP 1.5.2
 class NewFilamentOdometer(object):
+    """
+    copied from gcodeinterpreter.py Version OP 1.5.2
+    """
     def __init__(self, extrusionChangedListener=None):
         # self._logger = logging.getLogger(__name__)
         self.extrusionChangedListener = extrusionChangedListener
@@ -26,16 +27,17 @@ class NewFilamentOdometer(object):
         self.duplicationMode = False
         self._fireExtrusionChangedEvent()
 
-    # reset only the extruded ammount, the other values like relative/absolute mode must be untouched
     def reset_extruded_length(self):
+        """
+        reset only the extruded ammount,
+        the other values like relative/absolute mode must be untouched
+        """
         for toolIndex in range(len(self.maxExtrusion)):
             self.maxExtrusion[toolIndex] = 0.0
             self.totalExtrusion[toolIndex] = 0.0
         # yes, it it changed, but the UI should present last used value self._fireExtrusionChangedEvent()
 
     def processGCodeLine(self, line):
-
-        # origLine = line
         # comment should not be during "hook-processing"
         if ";" in line:
             # comment = line[line.find(";") + 1:].strip()

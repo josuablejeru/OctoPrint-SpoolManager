@@ -4,19 +4,15 @@ import json
 import os
 import logging
 import shutil
-import sqlite3
 
 from octoprint_SpoolManager.WrappedLoggingHandler import WrappedLoggingHandler
 from peewee import *
 
 from octoprint_SpoolManager.api import Transformer
 from octoprint_SpoolManager.common import StringUtils
-from octoprint_SpoolManager.models.BaseModel import BaseModel
 from octoprint_SpoolManager.models.PluginMetaDataModel import PluginMetaDataModel
 from octoprint_SpoolManager.models.SpoolModel import SpoolModel
 
-# from octoprint_SpoolManager.models.MaterialModel import MaterialModel
-# from octoprint_SpoolManager.models.MaterialCharacteristicModel import MaterialCharacteristicModel
 
 FORCE_CREATE_TABLES = False
 
@@ -58,15 +54,6 @@ class DatabaseManager:
         self._isConnected = False
         self._currentErrorMessageDict = None
 
-    ################################################################################################## private functions
-    # "databaseSettings"] = {
-    # "type": "postgres",
-    # "host": "localhost",
-    # "port": 5432,
-    # "databaseName": "SpoolManagerDatabase",
-    # "user": "Olli",
-    # "password": "illO"
-
     def _buildDatabaseConnection(self):
         database = None
         if self._databaseSettings.useExternal == False:
@@ -93,7 +80,6 @@ class DatabaseManager:
         return database
 
     def _createDatabase(self, forceCreateTables):
-
         if forceCreateTables:
             self._logger.info("Creating new database-tables, because FORCE == TRUE!")
             self._createDatabaseTables()
@@ -104,7 +90,6 @@ class DatabaseManager:
         self._logger.info("Database created-check done")
 
     def _createOrUpgradeSchemeIfNecessary(self):
-
         self._logger.info("Check if database-scheme upgrade needed...")
         schemeVersionFromDatabaseModel = None
         schemeVersionFromDatabase = None
@@ -182,465 +167,12 @@ class DatabaseManager:
             )
         pass
 
-    def _upgradeDatabase(
-        self, currentDatabaseSchemeVersion, targetDatabaseSchemeVersion
-    ):
-
-        migrationFunctions = [
-            self._upgradeFrom1To2,
-            self._upgradeFrom2To3,
-            self._upgradeFrom3To4,
-            self._upgradeFrom4To5,
-            self._upgradeFrom5To6,
-            self._upgradeFrom6To7,
-            self._upgradeFrom7To8,
-            self._upgradeFrom8To9,
-            self._upgradeFrom9To10,
-        ]
-
-        for migrationMethodIndex in range(
-            currentDatabaseSchemeVersion - 1, targetDatabaseSchemeVersion - 1
-        ):
-            self._logger.info(
-                "Database migration from '"
-                + str(migrationMethodIndex + 1)
-                + "' to '"
-                + str(migrationMethodIndex + 2)
-                + "'"
-            )
-            migrationFunctions[migrationMethodIndex]()
-            pass
-        pass
-
-    def _upgradeFrom9To10(self):
-        self._logger.info(" Starting 9 -> 10")
-        # What is changed:
-        # -
-        self._passMessageToClient(
-            "error",
-            "DatabaseManager",
-            "Could not upgrade database scheme V1 to V2. See OctoPrint.log for details!",
-        )
-        self._logger.info(" Successfully 9 -> 10")
-
-    def _upgradeFrom8To9(self):
-        self._logger.info(" Starting 8 -> 9")
-        # What is changed:
-        # -
-        self._passMessageToClient(
-            "error",
-            "DatabaseManager",
-            "Could not upgrade database scheme V1 to V2. See OctoPrint.log for details!",
-        )
-        self._logger.info(" Successfully 8 -> 9")
-
-    def _upgradeFrom7To8(self):
-        self._logger.info(" Starting 7 -> 8")
-        # What is changed:
-        # -
-        self._passMessageToClient(
-            "error",
-            "DatabaseManager",
-            "Could not upgrade database scheme V1 to V2. See OctoPrint.log for details!",
-        )
-        self._logger.info(" Successfully 7 -> 8")
-
-    def _upgradeFrom6To7(self):
-        self._logger.info(" Starting 6 -> 7")
-        # What is changed:
-        # - Recalculate remaining weight
-
-        self._logger.info("  try to calculate remaining weight.")
-
-        #  Calculate the remaining weight for all current spools
-        with self._database.atomic() as transaction:  # Opens new transaction.
-
-            try:
-                allSpoolModels = self.loadAllSpoolsByQuery(None)
-                if allSpoolModels != None:
-                    for spoolModel in allSpoolModels:
-                        totalWeight = spoolModel.totalWeight
-                        usedWeight = spoolModel.usedWeight
-                        remainingWeight = Transformer.calculateRemainingWeight(
-                            usedWeight, totalWeight
-                        )
-                        if remainingWeight != None:
-                            spoolModel.remainingWeight = remainingWeight
-                            spoolModel.save()
-
-                localSchemeVersionFromDatabaseModel = PluginMetaDataModel.get(
-                    PluginMetaDataModel.key
-                    == PluginMetaDataModel.KEY_DATABASE_SCHEME_VERSION
-                )
-                localSchemeVersionFromDatabaseModel.value = "7"
-                localSchemeVersionFromDatabaseModel.save()
-
-                # do expicit commit
-                transaction.commit()
-            except:
-                # Because this block of code is wrapped with "atomic", a
-                # new transaction will begin automatically after the call
-                # to rollback().
-                transaction.rollback()
-                self._logger.exception(
-                    "Could not calculate remainingWeight during scheme update from 6 To 7:"
-                )
-
-                return
-            pass
-        self._logger.info(" Successfully 6 -> 7")
-
-    def _upgradeFrom5To6(self):
-        self._logger.info(" Starting 5 -> 6")
-        # What is changed:
-        # - Recalculate remaining weight
-        # - offsetTemperature = IntegerField(null=True)  # since V6
-        # - offsetBedTemperature = IntegerField(null=True)  # since V6
-        # - offsetEnclosureTemperature = IntegerField(null=True)  # since V6
-
-        connection = sqlite3.connect(self._databaseSettings.fileLocation)
-        cursor = connection.cursor()
-
-        sql = """
-		PRAGMA foreign_keys=off;
-		BEGIN TRANSACTION;
-
-			ALTER TABLE 'spo_spoolmodel' ADD 'offsetTemperature' INTEGER;
-			ALTER TABLE 'spo_spoolmodel' ADD 'offsetBedTemperature' INTEGER;
-			ALTER TABLE 'spo_spoolmodel' ADD 'offsetEnclosureTemperature' INTEGER;
-
-			UPDATE 'spo_pluginmetadatamodel' SET value=6 WHERE key='databaseSchemeVersion';
-		COMMIT;
-		PRAGMA foreign_keys=on;
-		"""
-        cursor.executescript(sql)
-        connection.close()
-
-        self._logger.info("  try to calculate remaining weight.")
-        #  Calculate the remaining weight for all current spools
-        with self._database.atomic() as transaction:  # Opens new transaction.
-            try:
-                allSpoolModels = self.loadAllSpoolsByQuery(None)
-                if allSpoolModels != None:
-                    for spoolModel in allSpoolModels:
-                        totalWeight = spoolModel.totalWeight
-                        usedWeight = spoolModel.usedWeight
-                        remainingWeight = Transformer.calculateRemainingWeight(
-                            usedWeight, totalWeight
-                        )
-                        if remainingWeight != None:
-                            spoolModel.remainingWeight = remainingWeight
-                            spoolModel.save()
-                # do expicit commit
-                transaction.commit()
-            except Exception as e:
-                # Because this block of code is wrapped with "atomic", a
-                # new transaction will begin automatically after the call
-                # to rollback().
-                transaction.rollback()
-                self._logger.exception(
-                    "Could not calculate remainingWeight during scheme update from 5 To 6:"
-                    + str(e)
-                )
-
-                return
-            pass
-
-        self._logger.info(" Successfully 5 -> 6")
-        pass
-
-    def _upgradeFrom4To5(self):
-        self._logger.info(" Starting 4 -> 5")
-        # What is changed:
-        # SpoolModel (needed, because last script created a new table and altering was already done
-        # - materialCharacteristic = CharField(null=True, index=True) # strong, soft,... # since V4: new
-        # - material = CharField(null=True, index=True)	# since V4: added index
-        # - vendor = CharField(null=True, index=True) # since V4: added index
-        connection = sqlite3.connect(self._databaseSettings.fileLocation)
-        cursor = connection.cursor()
-
-        self._executeSQLQuietly(
-            cursor, "ALTER TABLE 'spo_spoolmodel' ADD 'updated' DATETIME"
-        )
-        self._executeSQLQuietly(
-            cursor, "ALTER TABLE 'spo_spoolmodel' ADD 'originator' CHAR(60)"
-        )
-        self._executeSQLQuietly(
-            cursor,
-            "ALTER TABLE 'spo_spoolmodel' ADD 'materialCharacteristic' VARCHAR(255)",
-        )
-        self._executeSQLQuietly(
-            cursor, "ALTER TABLE 'spo_spoolmodel' ADD 'isActive' INTEGER"
-        )
-        self._executeSQLQuietly(cursor, "UPDATE 'spo_spoolmodel' SET isActive=1")
-        self._executeSQLQuietly(
-            cursor,
-            "CREATE INDEX spoolmodel_materialCharacteristic ON spo_spoolmodel (materialCharacteristic)",
-        )
-        self._executeSQLQuietly(
-            cursor, "CREATE INDEX spoolmodel_material ON spo_spoolmodel (material)"
-        )
-        self._executeSQLQuietly(
-            cursor, "CREATE INDEX spoolmodel_vendor ON spo_spoolmodel (vendor)"
-        )
-
-        self._executeSQLQuietly(
-            cursor,
-            "UPDATE 'spo_pluginmetadatamodel' SET value=5 WHERE key='databaseSchemeVersion'",
-        )
-
-        # sql = """
-        # PRAGMA foreign_keys=off;
-        # BEGIN TRANSACTION;
-        #
-        # 	ALTER TABLE 'spo_spoolmodel' ADD 'updated' DATETIME;
-        # 	ALTER TABLE 'spo_spoolmodel' ADD 'originator' CHAR(60);
-        # 	ALTER TABLE 'spo_spoolmodel' ADD 'materialCharacteristic' VARCHAR(255);
-        # 	ALTER TABLE 'spo_spoolmodel' ADD 'isActive' INTEGER;
-        # 	UPDATE 'spo_spoolmodel' SET isActive=1;
-        #
-        # 	CREATE INDEX spoolmodel_materialCharacteristic ON spo_spoolmodel (materialCharacteristic);
-        # 	CREATE INDEX spoolmodel_material ON spo_spoolmodel (material);
-        # 	CREATE INDEX spoolmodel_vendor ON spo_spoolmodel (vendor);
-        #
-        # 	UPDATE 'spo_pluginmetadatamodel' SET value=5 WHERE key='databaseSchemeVersion';
-        # COMMIT;
-        # PRAGMA foreign_keys=on;
-        # """
-        # cursor.executescript(sql)
-
-        connection.close()
-
-        self._logger.info(" Successfully 4 -> 5")
-        pass
-
     def _executeSQLQuietly(self, cursor, sqlStatement):
         try:
             cursor.execute(sqlStatement)
         except Exception as e:
             self._logger.error(sqlStatement)
             self._logger.exception(e)
-
-    def _upgradeFrom4To5_HACK(self, sqlStatement):
-
-        connection = sqlite3.connect(self._databaseSettings.fileLocation)
-        cursor = connection.cursor()
-
-        sql = """
-		PRAGMA foreign_keys=off;
-		BEGIN TRANSACTION;
-		"""
-
-        # ALTER TABLE 'spo_spoolmodel' ADD 'updated' DATETIME;
-        # ALTER TABLE 'spo_spoolmodel' ADD 'originator' CHAR(60);
-        # ALTER TABLE 'spo_spoolmodel' ADD 'materialCharacteristic' VARCHAR(255);
-        # ALTER TABLE 'spo_spoolmodel' ADD 'isActive' INTEGER;
-        # UPDATE 'spo_spoolmodel' SET isActive=1;
-        #
-        # CREATE INDEX spoolmodel_materialCharacteristic ON spo_spoolmodel (materialCharacteristic);
-        # CREATE INDEX spoolmodel_material ON spo_spoolmodel (material);
-        # CREATE INDEX spoolmodel_vendor ON spo_spoolmodel (vendor);
-        #
-        # UPDATE 'spo_pluginmetadatamodel' SET value=5 WHERE key='databaseSchemeVersion';
-
-        sql = (
-            sql
-            + """
-		COMMIT;
-		PRAGMA foreign_keys=on;
-		"""
-        )
-        cursor.executescript(sql)
-
-        connection.close()
-
-    def _upgradeFrom3To4(self):
-        self._logger.info(" Starting 3 -> 4")
-        # What is changed:
-        # BaseModel, so add to all tables
-        # - updated = DateTimeField(default=datetime.datetime.now)
-        # - version = SmallIntegerField(null=True)
-        # - originator = FixedCharField(null=True, max_length=60)
-        # SpoolModel
-        # - materialCharacteristic = CharField(null=True, index=True) # strong, soft,... # since V4: new
-        # - material = CharField(null=True, index=True)	# since V4: added index
-        # - vendor = CharField(null=True, index=True) # since V4: added index
-        # - encloser -> rename to enclosureTemperature
-        #               ALTER TABLE spo_spoolmodel RENAME COLUMN encloserTemperature to enclosureTemperature; not working
-        #               SQLite did not support the ALTER TABLE RENAME COLUMN syntax before version 3.25.0.
-        #               see https://www.sqlitetutorial.net/sqlite-rename-column/#:~:text=SQLite%20did%20not%20support%20the,the%20version%20lower%20than%203.25.
-        connection = sqlite3.connect(self._databaseSettings.fileLocation)
-        cursor = connection.cursor()
-
-        # SCHROTT!!!!! zuerst 'ALTER' und dann eine neue Tabelle erstellen ohne die ALTER-Spalten, SUPER !!!!
-        sql = """
-		PRAGMA foreign_keys=off;
-		BEGIN TRANSACTION;
-
-			ALTER TABLE 'spo_pluginmetadatamodel' ADD 'updated' DATETIME;
-			ALTER TABLE 'spo_pluginmetadatamodel' ADD 'version' INTEGER;
-			ALTER TABLE 'spo_pluginmetadatamodel' ADD 'originator' CHAR(60);
-			UPDATE 'spo_pluginmetadatamodel' SET version=1;
-
-			ALTER TABLE 'spo_spoolmodel' ADD 'updated' DATETIME;
-			ALTER TABLE 'spo_spoolmodel' ADD 'originator' CHAR(60);
-			ALTER TABLE 'spo_spoolmodel' ADD 'materialCharacteristic' VARCHAR(255);
-			ALTER TABLE 'spo_spoolmodel' ADD 'isActive' INTEGER;
-			UPDATE 'spo_spoolmodel' SET isActive=1;
-
-			CREATE INDEX spoolmodel_materialCharacteristic ON spo_spoolmodel (materialCharacteristic);
-			CREATE INDEX spoolmodel_material ON spo_spoolmodel (material);
-			CREATE INDEX spoolmodel_vendor ON spo_spoolmodel (vendor);
-
-			ALTER TABLE 'spo_spoolmodel' RENAME TO 'spo_spoolmodel_old';
-			CREATE TABLE "spo_spoolmodel" (
-				"databaseId" INTEGER NOT NULL PRIMARY KEY,
-				"created" DATETIME NOT NULL,
-				"isTemplate" INTEGER,
-				"displayName" VARCHAR(255),
-				"vendor" VARCHAR(255),
-				"material" VARCHAR(255),
-				"density" REAL,
-				"diameter" REAL,
-				"colorName" VARCHAR(255),
-				"color" VARCHAR(255),
-				"temperature" INTEGER,
-				"totalWeight" REAL,
-				"usedWeight" REAL,
-				"remainingWeight" REAL,
-				"usedLength" INTEGER,
-				"code" VARCHAR(255),
-				"firstUse" DATETIME,
-				"lastUse" DATETIME,
-				"purchasedFrom" VARCHAR(255),
-				"purchasedOn" DATE,
-				"cost" REAL,
-				"costUnit" VARCHAR(255),
-				"labels" TEXT,
-				"noteText" TEXT,
-				"noteDeltaFormat" TEXT,
-				"noteHtml" TEXT,
-				'version' INTEGER,
-				'diameterTolerance' REAL,
-				'spoolWeight' REAL,
-				'flowRateCompensation' INTEGER,
-				'bedTemperature' INTEGER,
-				'enclosureTemperature' INTEGER,
-				'totalLength' INTEGER);
-
-				INSERT INTO 'spo_spoolmodel'
-				(databaseId, created, isTemplate, displayName, vendor, material, density, diameter, diameter, colorName, color, temperature, totalWeight, usedWeight, remainingWeight, usedLength, code, firstUse, lastUse, purchasedFrom, purchasedOn, cost, costUnit, labels, noteText, noteDeltaFormat, noteHtml, version, diameterTolerance, spoolWeight, flowRateCompensation, bedTemperature, enclosureTemperature, totalLength)
-				  SELECT databaseId, created, isTemplate, displayName, vendor, material, density, diameter, diameter, colorName, color, temperature, totalWeight, usedWeight, remainingWeight, usedLength, code, firstUse, lastUse, purchasedFrom, purchasedOn, cost, costUnit, labels, noteText, noteDeltaFormat, noteHtml, version, diameterTolerance, spoolWeight, flowRateCompensation, bedTemperature, encloserTemperature, totalLength
-				  FROM 'spo_spoolmodel_old';
-
-				DROP TABLE 'spo_spoolmodel_old';
-
-			UPDATE 'spo_pluginmetadatamodel' SET value=4 WHERE key='databaseSchemeVersion';
-		COMMIT;
-		PRAGMA foreign_keys=on;
-		"""
-        cursor.executescript(sql)
-
-        connection.close()
-
-        self._logger.info(" Successfully 3 -> 4")
-        pass
-
-    def _upgradeFrom2To3(self):
-        self._logger.info(" Starting 2 -> 3")
-        # What is changed:
-        # - version = IntegerField(null=True)  # since V3
-        # - diameterTolerance = FloatField(null=True)  # since V3
-        # - flowRateCompensation = IntegerField(null=True)  # since V3
-        # - bedTemperature = IntegerField(null=True)  # since V3
-        # - enclosureTemperature = IntegerField(null=True)  # since V3
-
-        connection = sqlite3.connect(self._databaseSettings.fileLocation)
-        cursor = connection.cursor()
-
-        sql = """
-		PRAGMA foreign_keys=off;
-		BEGIN TRANSACTION;
-
-			ALTER TABLE 'spo_spoolmodel' ADD 'version' INTEGER;
-			ALTER TABLE 'spo_spoolmodel' ADD 'diameterTolerance' REAL;
-			ALTER TABLE 'spo_spoolmodel' ADD 'spoolWeight' REAL;
-			ALTER TABLE 'spo_spoolmodel' ADD 'flowRateCompensation' INTEGER;
-			ALTER TABLE 'spo_spoolmodel' ADD 'bedTemperature' INTEGER;
-			ALTER TABLE 'spo_spoolmodel' ADD 'encloserTemperature' INTEGER;
-			ALTER TABLE 'spo_spoolmodel' ADD 'totalLength' INTEGER;
-
-			UPDATE 'spo_spoolmodel' SET version=1;
-
-			UPDATE 'spo_pluginmetadatamodel' SET value=3 WHERE key='databaseSchemeVersion';
-		COMMIT;
-		PRAGMA foreign_keys=on;
-		"""
-        cursor.executescript(sql)
-
-        connection.close()
-
-        self._logger.info(" Successfully 2 -> 3")
-        pass
-
-    def _upgradeFrom1To2(self):
-        self._logger.info(" Starting 1 -> 2")
-        # What is changed:
-        # - SpoolModel: Add Column remainingWeight (needed fro filtering, sorting)
-        connection = sqlite3.connect(self._databaseSettings.fileLocation)
-        cursor = connection.cursor()
-
-        sql = """
-		PRAGMA foreign_keys=off;
-		BEGIN TRANSACTION;
-
-			ALTER TABLE 'spo_spoolmodel' ADD 'remainingWeight' REAL;
-
-			UPDATE 'spo_pluginmetadatamodel' SET value=2 WHERE key='databaseSchemeVersion';
-		COMMIT;
-		PRAGMA foreign_keys=on;
-		"""
-        cursor.executescript(sql)
-
-        connection.close()
-        self._logger.info(
-            "Database 'altered' successfully. Try to calculate remaining weight."
-        )
-        #  Calculate the remaining weight for all current spools
-        with self._database.atomic() as transaction:  # Opens new transaction.
-            try:
-                allSpoolModels = self.loadAllSpoolsByQuery(None)
-                if allSpoolModels != None:
-                    for spoolModel in allSpoolModels:
-                        totalWeight = spoolModel.totalWeight
-                        usedWeight = spoolModel.usedWeight
-                        remainingWeight = Transformer.calculateRemainingWeight(
-                            usedWeight, totalWeight
-                        )
-                        if remainingWeight != None:
-                            spoolModel.remainingWeight = remainingWeight
-                            spoolModel.save()
-
-                # do expicit commit
-                transaction.commit()
-            except Exception as e:
-                # Because this block of code is wrapped with "atomic", a
-                # new transaction will begin automatically after the call
-                # to rollback().
-                transaction.rollback()
-                self._logger.exception(
-                    "Could not upgrade database scheme from 1 To 2:" + str(e)
-                )
-
-                self._passMessageToClient(
-                    "error",
-                    "DatabaseManager",
-                    "Could not upgrade database scheme V1 to V2. See OctoPrint.log for details!",
-                )
-            pass
-
-        self._logger.info(" Successfully 1 -> 2")
-        pass
 
     def _createDatabaseTables(self):
         self._logger.info("Creating new database tables for spoolmanager-plugin")
@@ -742,8 +274,10 @@ class DatabaseManager:
     def getCurrentErrorMessageDict(self):
         return self._currentErrorMessageDict
 
-    # connect to the current database
     def connectoToDatabase(self, withMetaCheck=False, sendErrorPopUp=True):
+        """
+        connect to the current database
+        """
         # reset current errorDict
         self._currentErrorMessageDict = None
         self._isConnected = False
@@ -884,7 +418,6 @@ class DatabaseManager:
             if backupCurrentDatabaseSettings != None:
                 self._databaseSettings = backupCurrentDatabaseSettings
 
-    ################################################################################################ DATABASE OPERATIONS
     def _handleReusableConnection(
         self,
         databaseCallMethode,
@@ -1155,22 +688,6 @@ class DatabaseManager:
 
     def saveSpool(self, spoolModel, withReusedConnection=False):
         def databaseCallMethode():
-            # databaseId = model.get_id()
-            # if (databaseId != None):
-            # 	# we need to update and we need to make
-            # 	spoolModel = self.loadSpool(databaseId)
-            # 	if (spoolModel == None):
-            # 		self._passMessageToClient("error", "DatabaseManager",
-            # 								  "Could not update the Spool, because it is already deleted!")
-            # 		return
-            # 	else:
-            # 		versionFromUI = model.version if model.version != None else 1
-            # 		versionFromDatabase = spoolModel.version if spoolModel.version != None else 1
-            # 		if (versionFromUI != versionFromDatabase):
-            # 			self._passMessageToClient("error", "DatabaseManager",
-            # 									  "Could not update the Spool, because someone already modified the spool. Do a reload!")
-            # 			return
-
             with self._database.atomic() as transaction:  # Opens new transaction.
                 try:
                     databaseId = spoolModel.databaseId
