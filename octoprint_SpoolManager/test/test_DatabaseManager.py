@@ -1,10 +1,9 @@
+import logging
 import os
 import pprint
 import unittest
 
 from octoprint_SpoolManager import DatabaseManager, SpoolManagerAPI
-import logging
-
 from octoprint_SpoolManager.models.SpoolModel import SpoolModel
 
 
