@@ -1,6 +1,4 @@
 # coding=utf-8
-from __future__ import absolute_import
-
 import datetime
 import json
 import os
@@ -28,7 +26,7 @@ CURRENT_DATABASE_SCHEME_VERSION = 7
 MODELS = [PluginMetaDataModel, SpoolModel]
 
 
-class DatabaseManager(object):
+class DatabaseManager:
     class DatabaseSettings:
         # Internal stuff
         baseFolder = ""
