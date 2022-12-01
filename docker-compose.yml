@@ -8,7 +8,9 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./:/octoprint/plugins/
+      - ./:/octoprint/plugins/SpoolManager
+    depends_on:
+      - postgres
 
   postgres:
     image: "postgres:latest"
